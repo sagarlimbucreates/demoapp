@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0a0a0a;
+  --paper: #f5f4ef;
+  --smoke: #2a2a2a;
+  --ash: #8a8a86;
+  --line: #1a1a1a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-smoke: var(--smoke);
+  --color-ash: var(--ash);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  line-height: 1.7;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 30, "opsz" 144;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+/* Grain overlay via SVG noise — adds subtle editorial texture */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+
+/* Monochrome image treatment */
+.mono-img {
+  filter: grayscale(100%) contrast(1.05);
+}
+
+/* Reveal on hover — transform/opacity only */
+.btn-ink {
+  transition: transform 400ms cubic-bezier(0.2, 0.9, 0.2, 1),
+              opacity 300ms ease;
+}
+.btn-ink:hover { transform: translateY(-2px); }
+.btn-ink:active { transform: translateY(0); }
+
+/* Custom focus ring — visible, inky */
+:where(a, button):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Layered, ink-tinted shadow utility */
+.shadow-ink {
+  box-shadow:
+    0 1px 2px rgba(10, 10, 10, 0.06),
+    0 8px 18px -8px rgba(10, 10, 10, 0.14),
+    0 30px 60px -24px rgba(10, 10, 10, 0.22);
+}
+
+.shadow-ink-sm {
+  box-shadow:
+    0 1px 2px rgba(10, 10, 10, 0.05),
+    0 10px 24px -12px rgba(10, 10, 10, 0.18);
 }
